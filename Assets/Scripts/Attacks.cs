@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 namespace Assets.Scripts
 {
-    public class Attack
+    public class AttackInfo
     {
         public int StartupFrames { get; }
         public int ActiveFrames { get; }
@@ -20,7 +20,7 @@ namespace Assets.Scripts
 
     public class InputDetector
     {
-        private Stack<Input> inputBuffer;
+        private readonly Stack<Input> inputBuffer;
         public InputDetector()
         {
             inputBuffer = new Stack<Input>();
@@ -28,13 +28,14 @@ namespace Assets.Scripts
 
         public void NewInput(Input input)
         {
-            if(input.Direction != inputBuffer.Last<Input>().Direction)
-            inputBuffer.Push(input);
+            if (input.Direction != inputBuffer.Last<Input>().Direction)
+                inputBuffer.Push(input);
             
         }
 
         public void detectSpecial()
         {
+            //Must finish input reading
         }
     }
 
@@ -83,6 +84,8 @@ namespace Assets.Scripts
         Selection_Button = 4,
         Cencel_Button = 5,
         Menu_Pause_Button = 6,
+
+        Light_Heavy_Button = Light_Button | Heavy_Button,
     }
 
 
@@ -98,35 +101,48 @@ namespace Assets.Scripts
             Meter = me;
         }
 
+        // Checks if a character meets the requirments to do the attack
         public bool IsAllowed(Character character)
         {
             if (character.Meter > Meter
                     && character.Grounded == Grounded
                     && character.Airborn == Airborne)
-            return true;
+                return true;
 
             else
                 return false;
         }
     }
 
-    public abstract class SpecialAttack
+    public abstract class Attack
     {
+        //List of allowed motion inputs. Special attacks will have quite a few
         public List<List<CF_Direction_Inputs>> AllowedInputs { get; protected set; }
+        //The input required to activate the attack
         public CF_Action_Inputs activationInput { get; protected set; }
+        //The priority of the attack. Higher means more important
         public int Priority { get; protected set; }
+        //The amount of frames that will be checked to determine if
+        //  the inputs were completed. 
         public int InputWindow { get; protected set; }
+        //The conditions that must be met to execute the attack
         public AttackConditions AttackConditions { get; protected set; }
-        public Attack Attack { get; protected set; }
+        //The information about the attack such as damage and stun
+        public AttackInfo AttackInfo { get; protected set; }
     }
 
-    public class InputStorage
+    public abstract class InputStorage
     {
-        public List<Input> CF_Inputs;
-        public InputStorage()
+        //Saved list of unique inputs
+        public List<Input> CF_Inputs { get; set; }
+        //List of the attacks that the parent has
+        public List<Attack> parent_AttackList { get; set;}
+        protected InputStorage(List<Attack> in_parent_AttackList)
         {
             CF_Inputs = new List<Input>();
+            parent_AttackList = in_parent_AttackList;
         }
+        //Adds an input the storage if either the Direction or Action input change
         public void Update(Input input)
         {
             if(input.Direction != CF_Inputs.First().Direction)
@@ -138,7 +154,37 @@ namespace Assets.Scripts
                 CF_Inputs.Insert(0, input);
             }
         }
-        public bool CheckForSpecial(SpecialAttack special, Character character)
+
+        public Attack GetBestAttack(Character character)
+        {
+            List<Attack> attackList = new List<Attack>();
+            foreach(Attack attack in GetAttacksWithAction(CF_Inputs[0].Action).Where(x => CheckForAttackAllowed(x, character)))
+            {
+                attackList.Add(attack);
+            }
+
+            Attack bestAttack = attackList.First();
+            foreach (Attack attack in attackList.Where(x => x.Priority > bestAttack.Priority))
+            {
+                bestAttack = attack;
+            }
+            return bestAttack;
+        }
+
+        public List<Attack> GetAttacksWithAction(CF_Action_Inputs input)
+        {
+            List<Attack> returnAttacks = new List<Attack>();
+            foreach(Attack attack in parent_AttackList)
+            {
+                if(attack.activationInput == input)
+                {
+                    returnAttacks.Add(attack);
+                }
+            }
+            return returnAttacks;
+        }
+
+        public bool CheckForAttackAllowed(Attack special, Character character)
         {
 
             if (special.AttackConditions.IsAllowed(character))
@@ -159,7 +205,7 @@ namespace Assets.Scripts
             }
             return false;
         }
-        public List<Input> GetInputsInFrameWindow(SpecialAttack specialAttack)
+        public List<Input> GetInputsInFrameWindow(Attack specialAttack)
         {
             List<Input> inputs = new List<Input>();
             int currentFrame = Time.frameCount;

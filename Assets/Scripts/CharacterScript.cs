@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts;
 
-public class CharacterScript : MonoBehaviour
+namespace Assets.Scripts
 {
-    Animator animator;
-    public Character character;
-    // Start is called before the first frame update
-    void Start()
+    public class CharacterScript : MonoBehaviour
     {
-        animator = GetComponent<Animator>();
-    }
+        Animator animator;
+        public Character character { get; set; }
+        // Start is called before the first frame update
+        void Start()
+        {
+            animator = GetComponent<Animator>();
+        }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
+        // Update is called once per frame
+        void FixedUpdate()
+        {
+            //Update code framework not complete
+        }
     }
 }

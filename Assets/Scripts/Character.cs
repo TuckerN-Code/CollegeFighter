@@ -11,7 +11,7 @@ namespace Assets.Scripts
     public abstract class Character 
     {
         public GameObject self_Object { get; set; }
-        public List<SpecialAttack> attack_list = new List<SpecialAttack>() { };
+        public List<Attack> attack_list { get; set; }
         public InputStorage InputStorage { get; set; }
         public int max_health { get; set; }
 
@@ -41,7 +41,7 @@ namespace Assets.Scripts
 
     public class Programmer : Character
     {
-        private class SA_Bug : SpecialAttack
+        public class SA_Bug : Attack
         {
             public SA_Bug()
             {
@@ -65,7 +65,7 @@ namespace Assets.Scripts
             }
         }
 
-        Programmer()
+        public Programmer()
         {
             init();
         }
