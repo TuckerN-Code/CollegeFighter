@@ -42,12 +42,12 @@ namespace Assets.Scripts
     public struct Input
     {
         public CF_Direction_Inputs Direction { get; set; }
-        public CF_Action_Inputs Action { get; set; }
+        public List<CF_Action_Inputs> Actions { get; set; }
         public int inputFrame { get; set; }
-        public Input(CF_Direction_Inputs dir,CF_Action_Inputs act, int frame)
+        public Input(CF_Direction_Inputs dir,List<CF_Action_Inputs> act, int frame)
         {
             Direction = dir;
-            Action = act;
+            Actions = act;
             inputFrame = frame;
         }
     }
@@ -80,12 +80,10 @@ namespace Assets.Scripts
         None = 0,
         Light_Button = 1,
         Heavy_Button = 2,
-        Low_Button = 3,
-        Selection_Button = 4,
-        Cencel_Button = 5,
-        Menu_Pause_Button = 6,
-
-        Light_Heavy_Button = Light_Button | Heavy_Button,
+        Low_Button = 4,
+        Selection_Button = 8,
+        Cencel_Button = 9,
+        Menu_Pause_Button = 10,
     }
 
 
@@ -131,34 +129,45 @@ namespace Assets.Scripts
         public AttackInfo AttackInfo { get; protected set; }
     }
 
-    public abstract class InputStorage
+    public class InputStorage
     {
         //Saved list of unique inputs
         public List<Input> CF_Inputs { get; set; }
         //List of the attacks that the parent has
         public List<Attack> parent_AttackList { get; set;}
-        protected InputStorage(List<Attack> in_parent_AttackList)
+        public InputStorage(List<Attack> in_parent_AttackList)
         {
             CF_Inputs = new List<Input>();
             parent_AttackList = in_parent_AttackList;
         }
+
+        public InputStorage()
+        {
+            CF_Inputs = new List<Input>();
+        }
+
         //Adds an input the storage if either the Direction or Action input change
         public void Update(Input input)
         {
-            if(input.Direction != CF_Inputs.First().Direction)
+            if(CF_Inputs.Count == 0)
+            {
+                CF_Inputs.Add(input);
+                Debug.Log("Added input");
+            }
+            else if(input.Direction != CF_Inputs.First().Direction ||
+                !Enumerable.SequenceEqual<CF_Action_Inputs>(input.Actions.OrderBy(e => e), CF_Inputs.First().Actions.OrderBy(e => e)))
             {
                 CF_Inputs.Insert(0, input);
+                string inputs = string.Join(",", input.Actions);
+                Debug.Log("Added input: " + input.Direction + " " + inputs);
             }
-            else if (input.Action != CF_Inputs.First().Action)
-            {
-                CF_Inputs.Insert(0, input);
-            }
+            
         }
 
         public Attack GetBestAttack(Character character)
         {
             List<Attack> attackList = new List<Attack>();
-            foreach(Attack attack in GetAttacksWithAction(CF_Inputs[0].Action).Where(x => CheckForAttackAllowed(x, character)))
+            foreach(Attack attack in GetAttacksWithAction(CF_Inputs[0].Actions).Where(x => CheckForAttackAllowed(x, character)))
             {
                 attackList.Add(attack);
             }
@@ -171,15 +180,12 @@ namespace Assets.Scripts
             return bestAttack;
         }
 
-        public List<Attack> GetAttacksWithAction(CF_Action_Inputs input)
+        public List<Attack> GetAttacksWithAction(List<CF_Action_Inputs> input)
         {
             List<Attack> returnAttacks = new List<Attack>();
-            foreach(Attack attack in parent_AttackList)
+            foreach (Attack attack in parent_AttackList.Where(x => input.Contains(x.activationInput)))
             {
-                if(attack.activationInput == input)
-                {
-                    returnAttacks.Add(attack);
-                }
+                returnAttacks.Add(attack);
             }
             return returnAttacks;
         }

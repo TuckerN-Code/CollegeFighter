@@ -41,7 +41,9 @@ namespace Assets.Scripts
 
     public class Programmer : Character
     {
+#pragma warning disable S101 // Types should be named in PascalCase
         public class SA_Bug : Attack
+#pragma warning restore S101 // Types should be named in PascalCase
         {
             public SA_Bug()
             {
