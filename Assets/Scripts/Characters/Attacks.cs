@@ -57,22 +57,13 @@ namespace Assets.Scripts.Characters
         Neutral_Input = 5,
         None = 0,
         Down_Direction = 2,
-        Left_Direction = 4,
+        Forward_Direction = 6,
         Up_Direction = 8,
-        Right_Direction = 6,
-        DownLeft_Direction = Down_Direction | Left_Direction,
-        DownRight_Direction = Down_Direction | Right_Direction,
-        UpLeft_Direction = Up_Direction | Left_Direction,
-        UpRight_Direction = Up_Direction | Right_Direction,
-        TapToHoldButtonShift = 19,
-        HeldDown_Direction = Down_Direction << TapToHoldButtonShift,
-        HeldLeft_Direction = Left_Direction << TapToHoldButtonShift,
-        HeldUp_Direction = Up_Direction << TapToHoldButtonShift,
-        HeldRight_Direction = Right_Direction << TapToHoldButtonShift,
-        HeldDownLeft_Direction = HeldDown_Direction | HeldLeft_Direction,
-        HeldDownRight_Direction = HeldDown_Direction | HeldRight_Direction,
-        HeldUpLeft_Direction = HeldUp_Direction | HeldLeft_Direction,
-        HeldUpRight_Direction = HeldUp_Direction | HeldRight_Direction,
+        Back_Direction = 4,
+        DownForward_Direction = Down_Direction | Forward_Direction,
+        DownBack_Direction = Down_Direction | Back_Direction,
+        UpForward_Direction = Up_Direction | Forward_Direction,
+        UpBack_Direction = Up_Direction | Back_Direction,
     }
 
     public enum CF_Action_Inputs
@@ -126,13 +117,13 @@ namespace Assets.Scripts.Characters
                             return true;
                         break;
                     }
-                case CF_Action_Inputs.Menu_Pause_Button:
+                case CF_Action_Inputs.Start_Button:
                     {
                         if (Start_Button_Pressed)
                             return true;
                         break;
                     }
-                case CF_Action_Inputs.Selection_Button:
+                case CF_Action_Inputs.Select_Button:
                     {
                         if (Select_Button_Pressed)
                             return true;
@@ -217,7 +208,7 @@ namespace Assets.Scripts.Characters
         //The input required to activate the attack
         public CF_Action_Inputs activationInput { get; protected set; }
         //The priority of the attack. Higher means more important
-        public int Priority { get; protected set; }
+        public int Priority { get; set; }
         //The amount of frames that will be checked to determine if
         //  the inputs were completed. 
         public int InputWindow { get; protected set; }

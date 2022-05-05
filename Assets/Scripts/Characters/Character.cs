@@ -55,12 +55,12 @@ namespace Assets.Scripts.Characters
                         { new List<CF_Direction_Inputs>
                         {
                              CF_Direction_Inputs.Down_Direction,
-                             CF_Direction_Inputs.DownLeft_Direction,
-                             CF_Direction_Inputs.Left_Direction
+                             CF_Direction_Inputs.DownForward_Direction,
+                             CF_Direction_Inputs.Forward_Direction
                         }, new List<CF_Direction_Inputs>
                         {
                             CF_Direction_Inputs.Down_Direction,
-                            CF_Direction_Inputs.Left_Direction
+                            CF_Direction_Inputs.Forward_Direction
                         }
                     };
 
