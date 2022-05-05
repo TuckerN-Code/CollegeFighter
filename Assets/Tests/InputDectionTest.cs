@@ -5,10 +5,19 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Assets.Scripts.Characters;
 
-namespace UnityEditor.TestTools
+namespace UnityEngine.TestTools
 {
     public class InputDectionTest
     {
+
+        public Character InitCharacter()
+        {
+            Character character = new Programmer();
+            character.Grounded = true;
+            character.Airborn = false;
+            character.Meter = 100;
+            return character;
+        }
         public InputStorage InitShoto()
         {
             InputStorage shoto = new InputStorage();
@@ -24,7 +33,7 @@ namespace UnityEditor.TestTools
         {
             public Hadoken()
             {
-                AttackConditions = new AttackConditions();
+                AttackConditions = new AttackConditions(true, false, 0);
                 activationInput = CF_Action_Inputs.Light_Button;
                 AllowedInputs = new List<List<CF_Direction_Inputs>>
                 {
@@ -41,7 +50,7 @@ namespace UnityEditor.TestTools
         {
             public Shoryuken()
             {
-                AttackConditions = new AttackConditions();
+                AttackConditions = new AttackConditions(true, false, 0);
                 activationInput = CF_Action_Inputs.Light_Button;
                 AllowedInputs = new List<List<CF_Direction_Inputs>>
                 {
@@ -64,6 +73,8 @@ namespace UnityEditor.TestTools
 
             Assert.IsTrue(e.Has(CF_Action_Inputs.Light_Button));
         }
+
+        [Test]
         public void DoesEIOFHaveHeavy_True()
         {
             EnableInputsOnFrame e = new EnableInputsOnFrame();
@@ -71,6 +82,7 @@ namespace UnityEditor.TestTools
 
             Assert.IsTrue(e.Has(CF_Action_Inputs.Heavy_Button));
         }
+        [Test]
         public void DoesEIOFHaveLow_True()
         {
             EnableInputsOnFrame e = new EnableInputsOnFrame();
@@ -78,6 +90,7 @@ namespace UnityEditor.TestTools
 
             Assert.IsTrue(e.Has(CF_Action_Inputs.Low_Button));
         }
+        [Test]
         public void DoesEIOFHaveStart_True()
         {
             EnableInputsOnFrame e = new EnableInputsOnFrame();
@@ -85,6 +98,7 @@ namespace UnityEditor.TestTools
 
             Assert.IsTrue(e.Has(CF_Action_Inputs.Start_Button));
         }
+        [Test]
         public void DoesEIOFHaveSelect_True()
         {
             EnableInputsOnFrame e = new EnableInputsOnFrame();
@@ -92,31 +106,31 @@ namespace UnityEditor.TestTools
 
             Assert.IsTrue(e.Has(CF_Action_Inputs.Select_Button));
         }
-
+        [Test]
         public void DoesInputStorageContainQuarterCircle()
         {
             InputStorage shoto = InitShoto();
 
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Neutral_Input, new EnableInputsOnFrame(), 0));
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Down_Direction, new EnableInputsOnFrame(), 0));
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.DownForward_Direction, new EnableInputsOnFrame(), 0));
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Forward_Direction, new EnableInputsOnFrame(), 0));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Neutral_Input, new EnableInputsOnFrame(), 1));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Down_Direction, new EnableInputsOnFrame(), 2));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.DownForward_Direction, new EnableInputsOnFrame(), 3));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Forward_Direction, new EnableInputsOnFrame() { Light_Button_Pressed = true }, 4));
+            Attack hado = shoto.parent_AttackList[0];
+            Character chari = InitCharacter();
 
-            Assert.IsTrue(shoto.GetAttacksWithAction(
-                shoto.CF_Inputs[0].Actions)[0].GetType() == typeof(Hadoken));
+            Assert.IsTrue(shoto.CheckForAttackAllowed(hado, chari));
         }
-
+        [Test]
         public void DoesInputStorageContainDragonPunch()
         {
             InputStorage shoto = InitShoto();
 
             shoto.Update(new InputOnFrame(CF_Direction_Inputs.Neutral_Input, new EnableInputsOnFrame(), 0));
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Forward_Direction, new EnableInputsOnFrame(), 0));
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Down_Direction, new EnableInputsOnFrame(), 0));
-            shoto.Update(new InputOnFrame(CF_Direction_Inputs.DownForward_Direction, new EnableInputsOnFrame(), 0));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Forward_Direction, new EnableInputsOnFrame(), 1));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.Down_Direction, new EnableInputsOnFrame(), 2));
+            shoto.Update(new InputOnFrame(CF_Direction_Inputs.DownForward_Direction, new EnableInputsOnFrame(), 3));
 
-            Assert.IsTrue(shoto.GetAttacksWithAction(
-                shoto.CF_Inputs[0].Actions)[0].GetType() == typeof(Shoryuken));
+            Assert.IsTrue(shoto.CheckForAttackAllowed(shoto.parent_AttackList[1], InitCharacter()));
         }
 
         // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use

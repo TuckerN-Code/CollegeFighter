@@ -60,10 +60,10 @@ namespace Assets.Scripts.Characters
         Forward_Direction = 6,
         Up_Direction = 8,
         Back_Direction = 4,
-        DownForward_Direction = Down_Direction | Forward_Direction,
-        DownBack_Direction = Down_Direction | Back_Direction,
-        UpForward_Direction = Up_Direction | Forward_Direction,
-        UpBack_Direction = Up_Direction | Back_Direction,
+        DownForward_Direction = 3,
+        DownBack_Direction = 1,
+        UpForward_Direction = 9,
+        UpBack_Direction = 7,
     }
 
     public enum CF_Action_Inputs
