@@ -2,7 +2,7 @@
     "name": "Player1Conrols",
     "maps": [
         {
-            "name": "Default",
+            "name": "PlayerOne",
             "id": "0308067f-74fb-4f79-ba08-154a7b4a33db",
             "actions": [
                 {
@@ -11,7 +11,7 @@
                     "id": "3f3b776f-5624-4330-8f09-d4d71c11e422",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -146,6 +146,34 @@
                     "processors": "",
                     "groups": "Fightstick A Layout",
                     "action": "DownMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerTwo",
+            "id": "598f3bfb-3054-4e6b-9374-3d3ef8eabb33",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "1e90cc56-f280-473e-96cf-81f0c3522291",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9ba57286-fbf6-4e75-8620-71804ec02fd1",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
