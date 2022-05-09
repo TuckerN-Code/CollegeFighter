@@ -2,17 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerNaminationBehaviour : MonoBehaviour
+namespace PlayerBehavior
 {
-    // Start is called before the first frame update
-    void Start()
+    public class PlayerAnaminationBehaviour : MonoBehaviour
     {
-        
-    }
+        [Header("Component References")]
+        public Animator playerAnimator;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //String Ids
+        private int playerMovementAnimationID;
+        private int playerAttackAnimationID;
+
+        public void SetupBehavior()
+        {
+            SetupAnimationIDs();
+        }
+
+        void SetupAnimationIDs()
+        {
+            //playerMovementAnimationID = Animator.StringToHash("Movement");
+            playerAttackAnimationID = Animator.StringToHash("LightPunch");
+        }
+
+        public void UpdateMovementAnimation(float movementBlendValue)
+        {
+            //playerAnimator.SetFloat(playerMovementAnimationID, movementBlendValue);
+        }
+
+        public void PlayAttackAnimation()
+        {
+            playerAnimator.SetTrigger("LightPunch");
+        }
     }
 }
