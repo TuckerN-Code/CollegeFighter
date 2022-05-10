@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using 
 
 namespace PlayerBehavior
 {
@@ -28,6 +29,10 @@ namespace PlayerBehavior
 
         private string currentControlScheme;
 
+
+        //Player state
+        private PlayerStateManager playerState;
+
         // Start is called before the first frame update
         public void SetupPlayer(int newPlayerID)
         { 
@@ -50,17 +55,54 @@ namespace PlayerBehavior
             rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
         }
 
+        public void onJump(InputAction.CallbackContext value)
+        {
+            if (value.started)
+            { 
+                //Jump Code
+            }
+        }
+
         public void onLight(InputAction.CallbackContext value)
         {
             if (value.started)
             {
+                //Add code to handle hitboxes
                 playerAnaminationBehaviour.PlayAttackAnimation();
             }
         }
 
         public void onHeavy(InputAction.CallbackContext value)
         {
+            //Heavy code
+        }
 
+        public void onForward(InputAction.CallbackContext value)
+        {
+            if (value.started)
+            {
+                Vector2 inputMovement = new Vector2(.01f, 0);
+                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+            }
+            else if (value.canceled)
+            {
+                Vector2 inputMovement = new Vector2(0, 0);
+                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+            }
+        }
+
+        public void onBack(InputAction.CallbackContext value)
+        {
+            if (value.started)
+            {
+                Vector2 inputMovement = new Vector2(-.01f, 0);
+                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+            }
+            else if (value.canceled)
+            {
+                Vector2 inputMovement = new Vector2(0, 0);
+                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+            }
         }
 
         public void OnTogglePause(InputAction.CallbackContext value)
@@ -118,7 +160,7 @@ namespace PlayerBehavior
 
         void UpdatePlayerMovement()
         {
-            playerMovementBehavour.UpdateMovementData(smoothInputMovement);
+            playerMovementBehavour.UpdateMovementData(rawInputMovement);
         }
 
         void UpdatePlayerAnimationMovement()

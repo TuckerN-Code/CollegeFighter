@@ -995,10 +995,10 @@ MonoBehaviour:
     m_ActionName: PlayerOne/HeavyAttack[/XInputControllerWindows/buttonNorth,/XInputControllerWindows1/buttonNorth,/Keyboard/i]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9149416168164605475}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 3470362496344003200}
+        m_TargetAssemblyTypeName: PlayerBehavior.PlayerController, PlayerBehavior
+        m_MethodName: onJump
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1013,6 +1013,38 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: c0bf9c5d-1f52-41ef-99d1-06d5b47d5a96
     m_ActionName: PlayerOne/Crouch[/XInputControllerWindows/dpad/down,/XInputControllerWindows1/dpad/down]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3470362496344003200}
+        m_TargetAssemblyTypeName: PlayerBehavior.PlayerController, PlayerBehavior
+        m_MethodName: onForward
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 181baca1-ecfb-4662-9c33-8aef2756035e
+    m_ActionName: PlayerOne/Forward[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3470362496344003200}
+        m_TargetAssemblyTypeName: PlayerBehavior.PlayerController, PlayerBehavior
+        m_MethodName: onBack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: bc7ee167-a60d-46f1-970b-573906692083
+    m_ActionName: PlayerOne/Back[/Keyboard/a]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerOne

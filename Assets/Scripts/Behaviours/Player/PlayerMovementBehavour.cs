@@ -9,7 +9,7 @@ public class PlayerMovementBehavour : MonoBehaviour
     public Rigidbody playerRigidBody;
 
     [Header("Movement Settings")]
-    public float movementSpeed = 3f;
+    public float movementSpeed = .03f;
 
     //Stored values
     private Camera mainCamera;
@@ -33,12 +33,13 @@ public class PlayerMovementBehavour : MonoBehaviour
 
     void FixedUpdate()
     {
-       
+        MoveThePlayer();
     }
     
     void MoveThePlayer()
     {
-         
+        Vector3 movement = MovementDirection * movementSpeed;
+        playerRigidBody.MovePosition(transform.position + movement);
     }
 
     void TurnThePlayer()

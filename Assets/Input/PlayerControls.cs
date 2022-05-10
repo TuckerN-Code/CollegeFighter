@@ -62,6 +62,33 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Forward"",
+                    ""type"": ""Button"",
+                    ""id"": ""181baca1-ecfb-4662-9c33-8aef2756035e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press,Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc7ee167-a60d-46f1-970b-573906692083"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press,Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""3277ff67-5b16-4311-a218-cd9474c06a2c"",
+                    ""expectedControlType"": ""Dpad"",
+                    ""processors"": """",
+                    ""interactions"": ""Press,Hold"",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -130,6 +157,39 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d52f76b8-8295-4dc7-a505-c7cc8c091e4d"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Forward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""628f2a17-7768-490f-9128-fe94e46ba7d6"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1793e49-62b3-441f-bd0e-3f4e613855ca"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -159,6 +219,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_PlayerOne_HeavyAttack = m_PlayerOne.FindAction("HeavyAttack", throwIfNotFound: true);
         m_PlayerOne_Jump = m_PlayerOne.FindAction("Jump", throwIfNotFound: true);
         m_PlayerOne_Crouch = m_PlayerOne.FindAction("Crouch", throwIfNotFound: true);
+        m_PlayerOne_Forward = m_PlayerOne.FindAction("Forward", throwIfNotFound: true);
+        m_PlayerOne_Back = m_PlayerOne.FindAction("Back", throwIfNotFound: true);
+        m_PlayerOne_Movement = m_PlayerOne.FindAction("Movement", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -222,6 +285,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerOne_HeavyAttack;
     private readonly InputAction m_PlayerOne_Jump;
     private readonly InputAction m_PlayerOne_Crouch;
+    private readonly InputAction m_PlayerOne_Forward;
+    private readonly InputAction m_PlayerOne_Back;
+    private readonly InputAction m_PlayerOne_Movement;
     public struct PlayerOneActions
     {
         private @PlayerControls m_Wrapper;
@@ -230,6 +296,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @HeavyAttack => m_Wrapper.m_PlayerOne_HeavyAttack;
         public InputAction @Jump => m_Wrapper.m_PlayerOne_Jump;
         public InputAction @Crouch => m_Wrapper.m_PlayerOne_Crouch;
+        public InputAction @Forward => m_Wrapper.m_PlayerOne_Forward;
+        public InputAction @Back => m_Wrapper.m_PlayerOne_Back;
+        public InputAction @Movement => m_Wrapper.m_PlayerOne_Movement;
         public InputActionMap Get() { return m_Wrapper.m_PlayerOne; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -251,6 +320,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Crouch.started -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnCrouch;
+                @Forward.started -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnForward;
+                @Forward.performed -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnForward;
+                @Forward.canceled -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnForward;
+                @Back.started -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnBack;
+                @Back.performed -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnBack;
+                @Back.canceled -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnBack;
+                @Movement.started -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnMovement;
+                @Movement.performed -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnMovement;
+                @Movement.canceled -= m_Wrapper.m_PlayerOneActionsCallbackInterface.OnMovement;
             }
             m_Wrapper.m_PlayerOneActionsCallbackInterface = instance;
             if (instance != null)
@@ -267,6 +345,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
+                @Forward.started += instance.OnForward;
+                @Forward.performed += instance.OnForward;
+                @Forward.canceled += instance.OnForward;
+                @Back.started += instance.OnBack;
+                @Back.performed += instance.OnBack;
+                @Back.canceled += instance.OnBack;
+                @Movement.started += instance.OnMovement;
+                @Movement.performed += instance.OnMovement;
+                @Movement.canceled += instance.OnMovement;
             }
         }
     }
@@ -286,5 +373,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnHeavyAttack(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnForward(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
+        void OnMovement(InputAction.CallbackContext context);
     }
 }
