@@ -59,7 +59,24 @@ namespace PlayerBehavior
         {
             if (value.started)
             { 
-                //Jump Code
+                //add input to storage
+
+                if(playerState.state_Able_To_Grounded_Move)
+                {
+                    //Grounded Jump code
+                }
+                else if(playerState.state_Able_To_Airborne_Move)
+                {
+                    //Airborne jump code
+                }
+                else if(playerState.state_Able_To_Jump_Cancel)
+                {
+                    //Jump cancel code
+                }
+                else
+                {
+                    //do not jump
+                }
             }
         }
 
@@ -67,27 +84,81 @@ namespace PlayerBehavior
         {
             if (value.started)
             {
-                //Add code to handle hitboxes
+                //Add input to storage
+
+                switch (playerState.state_Position)
+                {
+                    case positional_State.Airborn:
+                        //Jump light attack handling
+                        break;
+                    case positional_State.Standing:
+                        //Standing light attack handling
+                        break;
+                    case positional_State.Crouching:
+                        //Crouching light attack handling
+                        break;
+                }
                 playerAnaminationBehaviour.PlayAttackAnimation();
+            }
+            if (value.canceled)
+            {
+                //Add release input to storage
             }
         }
 
         public void onHeavy(InputAction.CallbackContext value)
         {
-            //Heavy code
+            if (value.started)
+            {
+                //Add input to storage
+                switch (playerState.state_Position)
+                {
+                    case positional_State.Airborn:
+                        //Jump heavy attack handling
+                        break;
+                    case positional_State.Standing:
+                        //Standing heavy attack handling
+                        break;
+                    case positional_State.Crouching:
+                        //Crouching heavy attack handling
+                        break;
+                }
+            }
+            if (value.canceled)
+            {
+                //Add release input to storage
+            }
         }
 
         public void onForward(InputAction.CallbackContext value)
         {
             if (value.started)
             {
-                Vector2 inputMovement = new Vector2(.01f, 0);
-                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                //Add input to storage
+                switch(playerState.state_Movement)
+                {
+                    case (Movement_State.Able_To_Grounded_Move):
+                        Vector2 inputMovement = new Vector2(.01f, 0);
+                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                        break;
+                    case (Movement_State.Able_To_Airbone_Move):
+                        //Jump movement code
+                        break;
+                }
             }
             else if (value.canceled)
             {
-                Vector2 inputMovement = new Vector2(0, 0);
-                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                switch(playerState.state_Movement)
+                {
+                    case (Movement_State.Able_To_Grounded_Move):
+                        Vector2 inputMovement = new Vector2(0, 0);
+                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                        break;
+                    case (Movement_State.Able_To_Airbone_Move):
+                        //Airborne movement code
+                        break;
+                }
+       
             }
         }
 
@@ -95,13 +166,31 @@ namespace PlayerBehavior
         {
             if (value.started)
             {
-                Vector2 inputMovement = new Vector2(-.01f, 0);
-                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                //Add input to storage
+                switch (playerState.state_Movement)
+                {
+                    case (Movement_State.Able_To_Grounded_Move):
+                        Vector2 inputMovement = new Vector2(-.01f, 0);
+                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                        break;
+                    case (Movement_State.Able_To_Airbone_Move):
+                        //Jump movement code
+                        break;
+                }
             }
             else if (value.canceled)
             {
-                Vector2 inputMovement = new Vector2(0, 0);
-                rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                switch (playerState.state_Movement)
+                {
+                    case (Movement_State.Able_To_Grounded_Move):
+                        Vector2 inputMovement = new Vector2(0, 0);
+                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                        break;
+                    case (Movement_State.Able_To_Airbone_Move):
+                        //Airborne movement code
+                        break;
+                }
+
             }
         }
 

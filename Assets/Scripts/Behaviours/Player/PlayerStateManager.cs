@@ -2,18 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum positional_State
+{
+    Airborn,
+    Standing,
+    Crouching,
+    Knocked_Down
+}
+
+public enum Movement_State
+{
+    Able_To_Airbone_Move,
+    Able_To_Grounded_Move,
+    Unable_To_Move
+}
+
 public class PlayerStateManager
 {
-    //Positional States
-    public bool state_Airborne { get; private set; }
-    public bool state_Standing { get; private set; }
-    public bool state_Crouching { get; private set; }
-    public bool state_Knocked_Down { get; private set; }
+    //Positional State
+    public positional_State state_Position { get; private set; }
+
 
     //Actionable States
-    public bool state_Able_To_Airborne_Move { get; private set; }
-    public bool state_Able_To_Grounded_Move { get; private set; }
+    public Movement_State state_Movement { get; private set; }
     public bool state_Able_To_Attack { get; private set; }
+    public bool state_Able_To_Jump_Cancel { get; private set; }
 
 
     //Status States
@@ -25,37 +38,32 @@ public class PlayerStateManager
 
     public PlayerStateManager()
     {
-        state_Airborne = false;
-        state_Standing = false;
-        state_Crouching = false;
-        state_Knocked_Down = false;
+        state_Position = positional_State.Standing;
 
-        state_Able_To_Grounded_Move = false;
-        state_Able_To_Airborne_Move = false;
+        state_Movement = Movement_State.Unable_To_Move;
         state_Able_To_Attack = false;
+        state_Able_To_Jump_Cancel = false;
 
         state_In_Hitlag = false;
         state_Starting_Attack = false;
         state_Airborne_Juggle = false;
         state_Airborne_Reset = false;
     }
-    public void setAirborn()
-    { 
-        state_Airborne = true;
-        state_Standing = false;
-        state_Crouching = false;
-        state_Able_To_Grounded_Move = false;
-    }
-    public void setGrounded()
+    public void setJumping()
     {
-        state_Airborne = false;
-        state_Standing = true;
-        state_Able_To_Grounded_Move = true;
+        state_Position = positional_State.Airborn;
+        state_Movement = Movement_State.Able_To_Airbone_Move;
+        state_Able_To_Jump_Cancel = false;
+    }
+    public void setStanding()
+    {
+        state_Position = positional_State.Standing;
+        state_Movement = Movement_State.Able_To_Grounded_Move;
     }
     public void setAttacking()
     {
         state_Starting_Attack = true;
-        state_Able_To_Grounded_Move = false;
+        state_Movement = Movement_State.Unable_To_Move;
     }
     public void AttackActive()
     {
@@ -63,22 +71,16 @@ public class PlayerStateManager
     }
     public void AttackFinished()
     {
-        state_Able_To_Grounded_Move = false;
+        state_Movement = Movement_State.Able_To_Grounded_Move;
+        state_Able_To_Jump_Cancel = false;
     }
     public void setCrouching()
     {
-        if(state_Able_To_Grounded_Move)
-        {
-            state_Standing = false;
-            state_Crouching = true;
-        }
+        state_Position = positional_State.Crouching;
     }
-    public void setStanding()
+
+    public void AttackJumpCancelable()
     {
-        if(state_Able_To_Grounded_Move)
-        {
-            state_Standing = true;
-            state_Crouching = false;
-        }
+        state_Able_To_Jump_Cancel = true;
     }
 }
