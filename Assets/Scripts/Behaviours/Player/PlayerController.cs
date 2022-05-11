@@ -3,287 +3,322 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using 
 
-namespace PlayerBehavior
+
+public class PlayerController : MonoBehaviour
 {
-    public class PlayerController : MonoBehaviour
+    //Player ID
+    private int playerID;
+
+    [Header("Sub Behaviors")]
+    public PlayerMovementBehavour playerMovementBehavour;
+    public PlayerAnaminationBehaviour playerAnaminationBehaviour;
+    public PlayerVisualsBehaviour playerVisualsBehaviour;
+    public PlayerAttackBehaviour playerAttackBehaviour;
+
+    [Header("Input Settings")]
+    public PlayerInput playerInput;
+    public float movementSmoothingSpeed = 1f;
+    private Vector3 rawInputMovement;
+    private Vector3 smoothInputMovement;
+
+    //Action Maps
+    private string actionMapPlayerControls = "PlayerOne";
+    private string actionMapMenuControls = "Menu Controls";
+
+    private string currentControlScheme;
+
+    //Player state
+    protected PlayerStateManager playerState = new PlayerStateManager();
+
+    //Bozo variables
+    private bool HoldingBack { get; set; }
+    private bool HoldingForward { get; set; }
+
+
+    // Start is called before the first frame update
+    public void Start()
     {
-        //Player ID
-        private int playerID;
+        playerState.RoundStart();
 
-        [Header("Sub Behaviors")]
-        public PlayerMovementBehavour playerMovementBehavour;
-        public PlayerAnaminationBehaviour playerAnaminationBehaviour;
-        public PlayerVisualsBehaviour playerVisualsBehaviour;
+        //playerMovementBehavour.SetupBehaviour();
+        //playerAnaminationBehaviour.SetupBehavior();
+        //playerVisualsBehaviour.SetupBehaviour();
+        playerAttackBehaviour.SetupBehaviour(ref this.playerState);
+    }
 
-        [Header("Input Settings")]
-        public PlayerInput playerInput;
-        public float movementSmoothingSpeed = 1f;
-        private Vector3 rawInputMovement;
-        private Vector3 smoothInputMovement;
+    public void SetupPlayer(int newPlayerID)
+    {
+        playerID = newPlayerID;
+        currentControlScheme = playerInput.currentControlScheme;
 
-        //Action Maps
-        private string actionMapPlayerControls = "PlayerOne";
-        private string actionMapMenuControls = "Menu Controls";
-
-        private string currentControlScheme;
-
-
-        //Player state
-        private PlayerStateManager playerState;
-
-        // Start is called before the first frame update
-        public void SetupPlayer(int newPlayerID)
-        { 
-            playerID = newPlayerID;
-            currentControlScheme = playerInput.currentControlScheme;
-
-            playerMovementBehavour.SetupBehaviour();
-            playerAnaminationBehaviour.SetupBehavior();
-            playerVisualsBehaviour.SetupBehaviour();
-        }
+        playerMovementBehavour.SetupBehaviour();
+        playerAnaminationBehaviour.SetupBehavior();
+        playerVisualsBehaviour.SetupBehaviour();
+        playerAttackBehaviour.SetupBehaviour(ref this.playerState);
+    }
 
 
-        //Input System Action Methods
-        //This is from playerInput when the actions are done.
-        //It stores the input vector
+    //Input System Action Methods
+    //This is from playerInput when the actions are done.
+    //It stores the input vector
 
-        public void OnMovement(InputAction.CallbackContext value)
+    public void onJump(InputAction.CallbackContext value)
+    {
+        if (value.started)
         {
-            Vector2 inputMovement = value.ReadValue<Vector2>();
-            rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-        }
+            //add input to storage
 
-        public void onJump(InputAction.CallbackContext value)
-        {
-            if (value.started)
-            { 
-                //add input to storage
-
-                if(playerState.state_Able_To_Grounded_Move)
-                {
-                    //Grounded Jump code
-                }
-                else if(playerState.state_Able_To_Airborne_Move)
-                {
-                    //Airborne jump code
-                }
-                else if(playerState.state_Able_To_Jump_Cancel)
-                {
-                    //Jump cancel code
-                }
-                else
-                {
-                    //do not jump
-                }
-            }
-        }
-
-        public void onLight(InputAction.CallbackContext value)
-        {
-            if (value.started)
+            if (playerState.state_Movement == Movement_State.Able_To_Grounded_Move)
             {
-                //Add input to storage
-
-                switch (playerState.state_Position)
-                {
-                    case positional_State.Airborn:
-                        //Jump light attack handling
-                        break;
-                    case positional_State.Standing:
-                        //Standing light attack handling
-                        break;
-                    case positional_State.Crouching:
-                        //Crouching light attack handling
-                        break;
-                }
-                playerAnaminationBehaviour.PlayAttackAnimation();
+                //Grounded Jump code
             }
-            if (value.canceled)
+            else if (playerState.state_Movement == Movement_State.Able_To_Airbone_Move)
             {
-                //Add release input to storage
+                //Airborne jump code
             }
-        }
-
-        public void onHeavy(InputAction.CallbackContext value)
-        {
-            if (value.started)
+            else if (playerState.state_Able_To_Jump_Cancel)
             {
-                //Add input to storage
-                switch (playerState.state_Position)
-                {
-                    case positional_State.Airborn:
-                        //Jump heavy attack handling
-                        break;
-                    case positional_State.Standing:
-                        //Standing heavy attack handling
-                        break;
-                    case positional_State.Crouching:
-                        //Crouching heavy attack handling
-                        break;
-                }
+                //Jump cancel code
             }
-            if (value.canceled)
+            else
             {
-                //Add release input to storage
+                //do not jump
             }
-        }
-
-        public void onForward(InputAction.CallbackContext value)
-        {
-            if (value.started)
-            {
-                //Add input to storage
-                switch(playerState.state_Movement)
-                {
-                    case (Movement_State.Able_To_Grounded_Move):
-                        Vector2 inputMovement = new Vector2(.01f, 0);
-                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-                        break;
-                    case (Movement_State.Able_To_Airbone_Move):
-                        //Jump movement code
-                        break;
-                }
-            }
-            else if (value.canceled)
-            {
-                switch(playerState.state_Movement)
-                {
-                    case (Movement_State.Able_To_Grounded_Move):
-                        Vector2 inputMovement = new Vector2(0, 0);
-                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-                        break;
-                    case (Movement_State.Able_To_Airbone_Move):
-                        //Airborne movement code
-                        break;
-                }
-       
-            }
-        }
-
-        public void onBack(InputAction.CallbackContext value)
-        {
-            if (value.started)
-            {
-                //Add input to storage
-                switch (playerState.state_Movement)
-                {
-                    case (Movement_State.Able_To_Grounded_Move):
-                        Vector2 inputMovement = new Vector2(-.01f, 0);
-                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-                        break;
-                    case (Movement_State.Able_To_Airbone_Move):
-                        //Jump movement code
-                        break;
-                }
-            }
-            else if (value.canceled)
-            {
-                switch (playerState.state_Movement)
-                {
-                    case (Movement_State.Able_To_Grounded_Move):
-                        Vector2 inputMovement = new Vector2(0, 0);
-                        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-                        break;
-                    case (Movement_State.Able_To_Airbone_Move):
-                        //Airborne movement code
-                        break;
-                }
-
-            }
-        }
-
-        public void OnTogglePause(InputAction.CallbackContext value)
-        {
-            if(value.started)
-            {
-                //GameManager.Instance.TogglePauseState(this);
-            }
-        }
-
-        //Input System Callbacks (when device is changed)
-
-        public void OnControlsChanged()
-        {
-            if(playerInput.currentControlScheme != currentControlScheme)
-            {
-                currentControlScheme = playerInput.currentControlScheme;
-
-                playerVisualsBehaviour.UpdatePlayerVisuals();
-                RemoveAllBindingOverrides();
-            }
-        }
-
-        //Input System callbacks for disconnect
-        void OnDeviceLost()
-        {
-            playerVisualsBehaviour.SetDisconnectedDeviceVisuals();
-        }
-
-        void OnDeviceRegained()
-        {
-            StartCoroutine(WaitForDeviceToRegained());
-        }
-
-        IEnumerator WaitForDeviceToRegained()
-        {
-            yield return new WaitForSeconds(0.1f);
-            playerVisualsBehaviour.UpdatePlayerVisuals();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            CalculateMovementInputSmoothing();
-            UpdatePlayerMovement();
-            UpdatePlayerAnimationMovement();
-        }
-
-        void CalculateMovementInputSmoothing()
-        {
-            smoothInputMovement = Vector3.Lerp(smoothInputMovement,
-                rawInputMovement,
-                Time.deltaTime * movementSmoothingSpeed);
-        }
-
-        void UpdatePlayerMovement()
-        {
-            playerMovementBehavour.UpdateMovementData(rawInputMovement);
-        }
-
-        void UpdatePlayerAnimationMovement()
-        {
-            playerAnaminationBehaviour.UpdateMovementAnimation(smoothInputMovement.magnitude);
-        }
-
-        public void SetInputActiveState(bool gameIsPaused)
-        {
-            switch (gameIsPaused)
-            {
-                case true:
-                    playerInput.DeactivateInput();
-                    break;
-                case false:
-                    playerInput.ActivateInput();
-                    break;
-            }
-
-        }
-
-        void RemoveAllBindingOverrides()
-        {
-            InputActionRebindingExtensions.RemoveAllBindingOverrides(playerInput.currentActionMap);
-        }
-
-        public void EnableGameplayControls()
-        {
-            playerInput.SwitchCurrentActionMap(actionMapPlayerControls);
-        }
-
-        public void EnablePauseMenuControls()
-        {
-            playerInput.SwitchCurrentActionMap(actionMapMenuControls);
         }
     }
+
+    public void onLight(InputAction.CallbackContext value)
+    {
+        if (value.started)
+        {
+            //Add input to storage
+            StopMovement();
+            switch (playerState.state_Position)
+            {
+                case positional_State.Airborn:
+                    playerAttackBehaviour.do_J_Light();
+                    break;
+                case positional_State.Standing:
+                    playerAttackBehaviour.do_S_Light();
+                    playerAnaminationBehaviour.PlayAttackAnimation("LightPunch");
+                    break;
+                case positional_State.Crouching:
+                    playerAttackBehaviour.do_C_Light();
+                    break;
+            }
+        }
+        if (value.canceled)
+        {
+            //Add release input to storage
+        }
+    }
+
+    public void onHeavy(InputAction.CallbackContext value)
+    {
+        if (value.started)
+        {
+            //Add input to storage
+            switch (playerState.state_Position)
+            {
+                case positional_State.Airborn:
+                    //Jump heavy attack handling
+                    break;
+                case positional_State.Standing:
+                    //Standing heavy attack handling
+                    break;
+                case positional_State.Crouching:
+                    //Crouching heavy attack handling
+                    break;
+            }
+        }
+        if (value.canceled)
+        {
+            //Add release input to storage
+        }
+    }
+
+    public void onForward(InputAction.CallbackContext value)
+    {
+        if (value.started)
+        {
+            //Add input to storage
+            switch (playerState.state_Movement)
+            {
+                case (Movement_State.Able_To_Grounded_Move):
+                    Vector2 inputMovement = new Vector2(.01f, 0);
+                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                    break;
+                case (Movement_State.Able_To_Airbone_Move):
+                    //Jump movement code
+                    break;
+            }
+            HoldingForward = true;
+        }
+        else if (value.canceled)
+        {
+            switch (playerState.state_Movement)
+            {
+                case (Movement_State.Able_To_Grounded_Move):
+                    Vector2 inputMovement = new Vector2(0, 0);
+                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                    ResumeMovement();
+                    break;
+                case (Movement_State.Able_To_Airbone_Move):
+                    //Airborne movement code
+                    break;
+            }
+            HoldingForward = false;
+
+        }
+    }
+
+    public void onBack(InputAction.CallbackContext value)
+    {
+        if (value.started)
+        {
+            //Add input to storage
+            switch (playerState.state_Movement)
+            {
+                case (Movement_State.Able_To_Grounded_Move):
+                    Vector2 inputMovement = new Vector2(-.01f, 0);
+                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                    break;
+                case (Movement_State.Able_To_Airbone_Move):
+                    //Jump movement code
+                    break;
+            }
+            HoldingBack = true;
+        }
+        else if (value.canceled)
+        {
+            switch (playerState.state_Movement)
+            {
+                case (Movement_State.Able_To_Grounded_Move):
+                    Vector2 inputMovement = new Vector2(0, 0);
+                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                    ResumeMovement();
+                    break;
+                case (Movement_State.Able_To_Airbone_Move):
+                    //Airborne movement code
+                    break;
+            }
+            HoldingBack = false;
+        }
+    }
+
+    public void StopMovement()
+    {
+        Vector2 inputMovement = new Vector2(0, 0);
+        rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+    }
+
+    public void ResumeMovement()
+    {
+        if (HoldingBack && HoldingForward)
+        {
+            rawInputMovement.x = 0f;
+        }
+        else if (HoldingBack)
+        {
+            rawInputMovement.x = -.01f;
+        }
+        else if (HoldingForward)
+        {
+            rawInputMovement.x = .01f;
+        }
+    }
+
+    public void OnTogglePause(InputAction.CallbackContext value)
+    {
+        if (value.started)
+        {
+            //GameManager.Instance.TogglePauseState(this);
+        }
+    }
+
+    //Input System Callbacks (when device is changed)
+
+    public void OnControlsChanged()
+    {
+        if (playerInput.currentControlScheme != currentControlScheme)
+        {
+            currentControlScheme = playerInput.currentControlScheme;
+
+            playerVisualsBehaviour.UpdatePlayerVisuals();
+            RemoveAllBindingOverrides();
+        }
+    }
+
+    //Input System callbacks for disconnect
+    void OnDeviceLost()
+    {
+        playerVisualsBehaviour.SetDisconnectedDeviceVisuals();
+    }
+
+    void OnDeviceRegained()
+    {
+        StartCoroutine(WaitForDeviceToRegained());
+    }
+
+    IEnumerator WaitForDeviceToRegained()
+    {
+        yield return new WaitForSeconds(0.1f);
+        playerVisualsBehaviour.UpdatePlayerVisuals();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        CalculateMovementInputSmoothing();
+        UpdatePlayerMovement();
+        UpdatePlayerAnimationMovement();
+    }
+
+    void CalculateMovementInputSmoothing()
+    {
+        smoothInputMovement = Vector3.Lerp(smoothInputMovement,
+            rawInputMovement,
+            Time.deltaTime * movementSmoothingSpeed);
+    }
+
+    void UpdatePlayerMovement()
+    {
+        playerMovementBehavour.UpdateMovementData(rawInputMovement);
+    }
+
+    void UpdatePlayerAnimationMovement()
+    {
+        playerAnaminationBehaviour.UpdateMovementAnimation(smoothInputMovement.magnitude);
+    }
+
+    public void SetInputActiveState(bool gameIsPaused)
+    {
+        switch (gameIsPaused)
+        {
+            case true:
+                playerInput.DeactivateInput();
+                break;
+            case false:
+                playerInput.ActivateInput();
+                break;
+        }
+
+    }
+
+    void RemoveAllBindingOverrides()
+    {
+        InputActionRebindingExtensions.RemoveAllBindingOverrides(playerInput.currentActionMap);
+    }
+
+    public void EnableGameplayControls()
+    {
+        playerInput.SwitchCurrentActionMap(actionMapPlayerControls);
+    }
+
+    public void EnablePauseMenuControls()
+    {
+        playerInput.SwitchCurrentActionMap(actionMapMenuControls);
+    }
 }
+

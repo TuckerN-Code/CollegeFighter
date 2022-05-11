@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using PlayerBehavior;
 
 public enum GameMode
 {
@@ -16,6 +15,7 @@ public class GameManager : Singleton<GameManager>
     public GameMode currentGameMode;
 
     public GameObject inScenePlayer;
+
     public int numberOfPlayers;
 
     public GameObject playerPrefab;

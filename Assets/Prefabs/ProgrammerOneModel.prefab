@@ -877,6 +877,7 @@ GameObject:
   - component: {fileID: 6023072766770720805}
   - component: {fileID: 1136149340979462022}
   - component: {fileID: 517824210493558864}
+  - component: {fileID: 8537380973062478691}
   m_Layer: 0
   m_Name: ProgrammerOneModel
   m_TagString: Untagged
@@ -918,6 +919,7 @@ MonoBehaviour:
   playerMovementBehavour: {fileID: 6769431924565119624}
   playerAnaminationBehaviour: {fileID: 1136149340979462022}
   playerVisualsBehaviour: {fileID: 6023072766770720805}
+  playerAttackBehaviour: {fileID: 8537380973062478691}
   playerInput: {fileID: 5835053347894052483}
   movementSmoothingSpeed: 1
 --- !u!54 &4444439060886862159
@@ -1045,6 +1047,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: bc7ee167-a60d-46f1-970b-573906692083
     m_ActionName: PlayerOne/Back[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3277ff67-5b16-4311-a218-cd9474c06a2c
+    m_ActionName: PlayerOne/Movement[/XInputControllerWindows/dpad,/XInputControllerWindows1/dpad]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerOne
@@ -1109,3 +1115,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8537380973062478691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9149416168164605475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0a9553cc2b7f246a734719ae7628d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

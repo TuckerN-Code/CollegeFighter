@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentGameMode: 0
-  inScenePlayer: {fileID: 0}
+  inScenePlayer: {fileID: 2025145531}
   numberOfPlayers: 0
   playerPrefab: {fileID: 2025145531}
 --- !u!1001 &1201507385

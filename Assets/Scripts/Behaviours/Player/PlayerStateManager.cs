@@ -49,6 +49,20 @@ public class PlayerStateManager
         state_Airborne_Juggle = false;
         state_Airborne_Reset = false;
     }
+
+    public void RoundStart()
+    {
+        state_Position = positional_State.Standing;
+
+        state_Movement = Movement_State.Able_To_Grounded_Move;
+        state_Able_To_Attack = false;
+        state_Able_To_Jump_Cancel = false;
+
+        state_In_Hitlag = false;
+        state_Starting_Attack = false;
+        state_Airborne_Juggle = false;
+        state_Airborne_Reset = false;
+    }
     public void setJumping()
     {
         state_Position = positional_State.Airborn;

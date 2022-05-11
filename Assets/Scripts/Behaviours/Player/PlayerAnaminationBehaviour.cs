@@ -2,36 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerBehavior
+
+public class PlayerAnaminationBehaviour : MonoBehaviour
 {
-    public class PlayerAnaminationBehaviour : MonoBehaviour
+    [Header("Component References")]
+    public Animator playerAnimator;
+
+    //String Ids
+    private int playerMovementAnimationID;
+    private int playerAttackAnimationID;
+
+    public void SetupBehavior()
     {
-        [Header("Component References")]
-        public Animator playerAnimator;
+        SetupAnimationIDs();
+    }
 
-        //String Ids
-        private int playerMovementAnimationID;
-        private int playerAttackAnimationID;
+    void SetupAnimationIDs()
+    {
 
-        public void SetupBehavior()
-        {
-            SetupAnimationIDs();
-        }
+    }
 
-        void SetupAnimationIDs()
-        {
-            //playerMovementAnimationID = Animator.StringToHash("Movement");
-            playerAttackAnimationID = Animator.StringToHash("LightPunch");
-        }
+    public void UpdateMovementAnimation(float movementBlendValue)
+    {
+        //playerAnimator.SetFloat(playerMovementAnimationID, movementBlendValue);
+    }
+    public void PlayAttackAnimation(string triggerName)
+    {
+        playerAnimator.SetTrigger(triggerName);
+    }    
 
-        public void UpdateMovementAnimation(float movementBlendValue)
-        {
-            //playerAnimator.SetFloat(playerMovementAnimationID, movementBlendValue);
-        }
-
-        public void PlayAttackAnimation()
-        {
-            playerAnimator.SetTrigger("LightPunch");
-        }
+    public void PlayAttackAnimation()
+    {
+        playerAnimator.SetTrigger("LightPunch");
     }
 }
+
