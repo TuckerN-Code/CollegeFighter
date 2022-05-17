@@ -160,6 +160,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""dd2de10d-ebae-43db-b2bb-a0901b826155"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""d52f76b8-8295-4dc7-a505-c7cc8c091e4d"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",

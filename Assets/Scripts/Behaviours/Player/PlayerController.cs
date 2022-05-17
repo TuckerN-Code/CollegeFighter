@@ -32,8 +32,7 @@ public class PlayerController : MonoBehaviour
     protected PlayerStateManager playerState = new PlayerStateManager();
 
     //Bozo variables
-    private bool HoldingBack { get; set; }
-    private bool HoldingForward { get; set; }
+    private float inputValue = 0f;
 
 
     // Start is called before the first frame update
@@ -84,6 +83,31 @@ public class PlayerController : MonoBehaviour
             else
             {
                 //do not jump
+            }
+        }
+    }
+
+    public void onDown(InputAction.CallbackContext value)
+    {
+        if (value.started)
+        {
+            switch(playerState.state_Movement)
+            {
+                case Movement_State.Able_To_Grounded_Move:
+                    playerAnaminationBehaviour.SetMovementAnimation(1);
+                    break;
+            }
+        }
+        if (value.canceled)
+        {
+            switch(playerState.state_Movement)
+            {
+                case Movement_State.Able_To_Grounded_Move:
+                    playerAnaminationBehaviour.SetMovementAnimation(0);
+                    break;
+                default:
+                    playerAnaminationBehaviour.SetMovementAnimation(0);
+                    break;
             }
         }
     }
@@ -146,30 +170,26 @@ public class PlayerController : MonoBehaviour
             switch (playerState.state_Movement)
             {
                 case (Movement_State.Able_To_Grounded_Move):
-                    Vector2 inputMovement = new Vector2(.01f, 0);
-                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                    inputValue += .1f;
+                    rawInputMovement = new Vector3(inputValue, 0, 0);
                     break;
                 case (Movement_State.Able_To_Airbone_Move):
                     //Jump movement code
                     break;
             }
-            HoldingForward = true;
         }
         else if (value.canceled)
         {
             switch (playerState.state_Movement)
             {
                 case (Movement_State.Able_To_Grounded_Move):
-                    Vector2 inputMovement = new Vector2(0, 0);
-                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-                    ResumeMovement();
+                    inputValue -= .1f;
+                    rawInputMovement = new Vector3(inputValue, 0, 0);
                     break;
                 case (Movement_State.Able_To_Airbone_Move):
                     //Airborne movement code
                     break;
             }
-            HoldingForward = false;
-
         }
     }
 
@@ -181,29 +201,26 @@ public class PlayerController : MonoBehaviour
             switch (playerState.state_Movement)
             {
                 case (Movement_State.Able_To_Grounded_Move):
-                    Vector2 inputMovement = new Vector2(-.01f, 0);
-                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+                    inputValue -= .1f;
+                    rawInputMovement = new Vector3(inputValue, 0, 0);
                     break;
                 case (Movement_State.Able_To_Airbone_Move):
                     //Jump movement code
                     break;
             }
-            HoldingBack = true;
         }
         else if (value.canceled)
         {
             switch (playerState.state_Movement)
             {
                 case (Movement_State.Able_To_Grounded_Move):
-                    Vector2 inputMovement = new Vector2(0, 0);
-                    rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-                    ResumeMovement();
+                    inputValue += .1f;
+                    rawInputMovement = new Vector3(inputValue, 0, 0);
                     break;
                 case (Movement_State.Able_To_Airbone_Move):
                     //Airborne movement code
                     break;
             }
-            HoldingBack = false;
         }
     }
 
@@ -215,18 +232,7 @@ public class PlayerController : MonoBehaviour
 
     public void ResumeMovement()
     {
-        if (HoldingBack && HoldingForward)
-        {
-            rawInputMovement.x = 0f;
-        }
-        else if (HoldingBack)
-        {
-            rawInputMovement.x = -.01f;
-        }
-        else if (HoldingForward)
-        {
-            rawInputMovement.x = .01f;
-        }
+
     }
 
     public void OnTogglePause(InputAction.CallbackContext value)

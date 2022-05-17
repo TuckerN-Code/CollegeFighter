@@ -31,6 +31,17 @@ public class PlayerAnaminationBehaviour : MonoBehaviour
         playerAnimator.SetTrigger(triggerName);
     }    
 
+    /*
+     * State IDs:
+     * 0 Idle
+     * 1 Crouching
+     * 
+     */
+
+    public void SetMovementAnimation(int stateID)
+    {
+        playerAnimator.SetInteger("MovementState", stateID);
+    }
     public void PlayAttackAnimation()
     {
         playerAnimator.SetTrigger("LightPunch");

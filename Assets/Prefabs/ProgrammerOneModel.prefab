@@ -1012,7 +1012,19 @@ MonoBehaviour:
     m_ActionId: 7fd5347d-1dab-48cd-a011-065367a3cc94
     m_ActionName: PlayerOne/Jump[/XInputControllerWindows/dpad/up,/XInputControllerWindows1/dpad/up]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3470362496344003200}
+        m_TargetAssemblyTypeName: PlayerController, PlayerBehavior
+        m_MethodName: onDown
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c0bf9c5d-1f52-41ef-99d1-06d5b47d5a96
     m_ActionName: PlayerOne/Crouch[/XInputControllerWindows/dpad/down,/XInputControllerWindows1/dpad/down]
   - m_PersistentCalls:
